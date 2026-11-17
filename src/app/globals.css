@@ -1,26 +1,535 @@
+@import url("https://fonts.googleapis.com/css2?family=Alex+Brush&family=Bebas+Neue&family=Caveat:wght@400;500;600;700&family=Cinzel:wght@600;700;800;900&family=Comic+Neue:ital,wght@0,400;0,700;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,500;0,700;1,400;1,600&family=Fredoka:wght@600;700;800&family=Kalam:wght@400;700&family=Nunito:wght@700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&display=swap");
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Brand colors */
+  --color-navy: #12264F;
+  --color-navy-dark: #0E1E45;
+  --color-yellow: #F5B82E;
+  --color-text-main: #1B2440;
+  --color-text-muted: #55607A;
+  --color-bg-light: #F5F7FB;
+  --color-border: #E4E8F1;
+
+  /* Content colors */
+  --color-syllabus: #1D5FD1;
+  --color-syllabus-light: #EAF1FF;
+  --color-notes: #0B7A58;
+  --color-notes-light: #E3F5EE;
+  --color-questions: #D9780A;
+  --color-questions-light: #FFF0E0;
+  --color-papers: #C2306B;
+  --color-papers-light: #FDE9F0;
+  --color-practice: #5B35C9;
+  --color-practice-light: #EFE9FD;
+  --color-practice-deep: #3B2A86;
+
+  /* Primary Modern Font: Plus Jakarta Sans */
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-pencil: 'Caveat', 'Kalam', 'Segoe Script', 'Bradley Hand', cursive, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.font-blink-brand {
+  font-family: 'Fredoka', 'Nunito', system-ui, sans-serif !important;
+  letter-spacing: -0.03em;
+}
+
+.font-pencil {
+  font-family: 'Caveat', 'Kalam', 'Segoe Script', 'Bradley Hand', cursive, sans-serif !important;
+}
+
+.font-dialogue {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
+}
+
+.font-comic-bubble {
+  font-family: 'Comic Neue', 'Comic Sans MS', cursive, sans-serif !important;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  background: #ffffff;
+  color: var(--color-text-main);
 }
+
+/* Concave circular cutout masks for Study Resources 2x2 cards around the center Results circle */
+@media (min-width: 640px) {
+  .corner-cutout-br {
+    -webkit-mask-image: radial-gradient(circle at 100% 100%, transparent 0, transparent 82px, black 83.5px);
+    mask-image: radial-gradient(circle at 100% 100%, transparent 0, transparent 82px, black 83.5px);
+  }
+  .corner-cutout-bl {
+    -webkit-mask-image: radial-gradient(circle at 0% 100%, transparent 0, transparent 82px, black 83.5px);
+    mask-image: radial-gradient(circle at 0% 100%, transparent 0, transparent 82px, black 83.5px);
+  }
+  .corner-cutout-tr {
+    -webkit-mask-image: radial-gradient(circle at 100% 0%, transparent 0, transparent 82px, black 83.5px);
+    mask-image: radial-gradient(circle at 100% 0%, transparent 0, transparent 82px, black 83.5px);
+  }
+  .corner-cutout-tl {
+    -webkit-mask-image: radial-gradient(circle at 0% 0%, transparent 0, transparent 82px, black 83.5px);
+    mask-image: radial-gradient(circle at 0% 0%, transparent 0, transparent 82px, black 83.5px);
+  }
+}
+
+@media (min-width: 1024px) {
+  .corner-cutout-br {
+    -webkit-mask-image: radial-gradient(circle at 100% 100%, transparent 0, transparent 88px, black 89.5px);
+    mask-image: radial-gradient(circle at 100% 100%, transparent 0, transparent 88px, black 89.5px);
+  }
+  .corner-cutout-bl {
+    -webkit-mask-image: radial-gradient(circle at 0% 100%, transparent 0, transparent 88px, black 89.5px);
+    mask-image: radial-gradient(circle at 0% 100%, transparent 0, transparent 88px, black 89.5px);
+  }
+  .corner-cutout-tr {
+    -webkit-mask-image: radial-gradient(circle at 100% 0%, transparent 0, transparent 88px, black 89.5px);
+    mask-image: radial-gradient(circle at 100% 0%, transparent 0, transparent 88px, black 89.5px);
+  }
+  .corner-cutout-tl {
+    -webkit-mask-image: radial-gradient(circle at 0% 0%, transparent 0, transparent 88px, black 89.5px);
+    mask-image: radial-gradient(circle at 0% 0%, transparent 0, transparent 88px, black 89.5px);
+  }
+}
+
+/* ========================================================================= */
+/* 3D HARDCOVER BOOK HOVER ANIMATION (Real 15% Cover Opening & Elevation)    */
+/* ========================================================================= */
+.book-3d-wrapper {
+  perspective: 1200px;
+  transform-style: preserve-3d;
+}
+
+.book-3d-cover-hinge {
+  transform-origin: 0% 50% !important;
+  transform-style: preserve-3d;
+  transition: transform 0.55s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.55s cubic-bezier(0.25, 1, 0.5, 1) !important;
+  will-change: transform, box-shadow;
+  backface-visibility: hidden;
+}
+
+.group:hover .book-3d-cover-hinge {
+  /* Opens cover by -27 degrees, pulling right edge back ~30px into 3D view */
+  transform: rotateY(-27deg) !important;
+  box-shadow: -4px 0 10px rgba(0, 0, 0, 0.35), 18px 16px 36px rgba(0, 0, 0, 0.45) !important;
+}
+
+.book-3d-inside-page {
+  transform-origin: 0% 50% !important;
+  transform-style: preserve-3d;
+  transition: transform 0.55s cubic-bezier(0.25, 1, 0.5, 1) !important;
+  will-change: transform;
+}
+
+.group:hover .book-3d-inside-page {
+  /* Subtle 5-degree natural lift of first paper page */
+  transform: rotateY(-6deg) !important;
+}
+
+.book-cover-peek-open {
+  transform: rotateY(-34deg) !important;
+  box-shadow: -6px 0 14px rgba(0, 0, 0, 0.4), 22px 18px 40px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Antique Bookmark Ribbon V-Tail Notch */
+.clip-v-tail {
+  clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 50% 65%, 0% 100%);
+}
+
+/* "My Lessons" Parchment Flyout Animated Entrance (Image 2) */
+@keyframes parchmentSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-16px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+.animate-parchment-in {
+  animation: parchmentSlideIn 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ========================================================================= */
+/* CONNECTED ACCORDION / CAROUSEL CARD SLIDE TRANSITIONS                    */
+/* (Smooth Leaving and Coming Transitions: Outgoing leaves, Incoming glides in) */
+/* ========================================================================= */
+@keyframes cardSlideOutLeft {
+  0% {
+    transform: translateX(0%);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}
+
+@keyframes cardSlideInRight {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0%);
+    opacity: 1;
+  }
+}
+
+@keyframes cardSlideOutRight {
+  0% {
+    transform: translateX(0%);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes cardSlideInLeft {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0%);
+    opacity: 1;
+  }
+}
+
+.animate-card-slide-out-left {
+  animation: cardSlideOutLeft 0.55s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.animate-card-slide-in-right {
+  animation: cardSlideInRight 0.55s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.animate-card-slide-out-right {
+  animation: cardSlideOutRight 0.55s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.animate-card-slide-in-left {
+  animation: cardSlideInLeft 0.55s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes resourceCardFade {
+  0% {
+    opacity: 0.35;
+    transform: scale(0.98) translateY(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-resource-card {
+  animation: resourceCardFade 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ========================================================================= */
+/* CONTINUOUS LOGO MARQUEE SLIDESHOW (Infinite Smooth Horizontal Scroll)     */
+/* ========================================================================= */
+@keyframes marqueeLeft {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marqueeRight {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+.animate-marquee-left {
+  display: flex;
+  width: max-content;
+  animation: marqueeLeft 36s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee-right {
+  display: flex;
+  width: max-content;
+  animation: marqueeRight 40s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee-left:hover,
+.animate-marquee-right:hover {
+  animation-play-state: paused !important;
+}
+
+/* ========================================================================= */
+/* CONTINUOUS SELF-DRAWING LOOP (Non-stopping, panoramic line art)          */
+/* ========================================================================= */
+@keyframes continuousDrawLoop {
+  0% {
+    stroke-dashoffset: 2600;
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  48% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  75% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  92% {
+    stroke-dashoffset: -2600;
+    opacity: 0.15;
+  }
+  100% {
+    stroke-dashoffset: -2600;
+    opacity: 0;
+  }
+}
+
+.animate-draw-loop-1 {
+  stroke-dasharray: 2600;
+  stroke-dashoffset: 2600;
+  animation: continuousDrawLoop 8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.animate-draw-loop-2 {
+  stroke-dasharray: 2600;
+  stroke-dashoffset: 2600;
+  animation: continuousDrawLoop 8s cubic-bezier(0.4, 0, 0.2, 1) 0.9s infinite;
+}
+
+.animate-draw-loop-3 {
+  stroke-dasharray: 2600;
+  stroke-dashoffset: 2600;
+  animation: continuousDrawLoop 8s cubic-bezier(0.4, 0, 0.2, 1) 1.8s infinite;
+}
+
+.animate-draw-loop-4 {
+  stroke-dasharray: 2600;
+  stroke-dashoffset: 2600;
+  animation: continuousDrawLoop 8s cubic-bezier(0.4, 0, 0.2, 1) 2.7s infinite;
+}
+
+.animate-draw-loop-accent {
+  stroke-dasharray: 1800;
+  stroke-dashoffset: 1800;
+  animation: continuousDrawLoop 8s cubic-bezier(0.4, 0, 0.2, 1) 1.4s infinite;
+}
+
+/* ========================================================================= */
+/* SELF-DRAWING LINE ANIMATION (For Speech Bubble & Hand-Drawn Elements)     */
+/* ========================================================================= */
+@keyframes selfDrawBubbleOutline {
+  0% {
+    stroke-dashoffset: 1400;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.animate-self-draw-bubble {
+  stroke-dasharray: 1400;
+  stroke-dashoffset: 1400;
+  animation: selfDrawBubbleOutline 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes selfDrawTail {
+  0% {
+    stroke-dashoffset: 100;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.animate-self-draw-tail {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: selfDrawTail 0.35s ease-out 0.08s forwards;
+}
+
+@keyframes scribbleUnderline {
+  0% {
+    stroke-dashoffset: 260;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.animate-scribble-draw {
+  stroke-dasharray: 260;
+  stroke-dashoffset: 260;
+  animation: scribbleUnderline 0.5s ease-out forwards;
+}
+
+@keyframes selfDrawPath100 {
+  0% {
+    stroke-dashoffset: 100;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.animate-self-draw-path {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: selfDrawPath100 0.75s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+/* Speech Bubble Self-Draw Border (1300px perimeter) */
+@keyframes selfDrawBubbleBorder {
+  0% {
+    stroke-dashoffset: 1300;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.animate-draw-bubble-border {
+  stroke-dasharray: 1300;
+  stroke-dashoffset: 1300;
+  animation: selfDrawBubbleBorder 0.75s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+/* ========================================================================= */
+/* SELF-DRAWING CONNECTING ARROWS (Draws Once & Stays Permanently Visible)   */
+/* ========================================================================= */
+@keyframes drawArrowOnce {
+  0% {
+    stroke-dashoffset: 300;
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+
+.animate-arrow-draw-top {
+  stroke-dasharray: 300;
+  stroke-dashoffset: 300;
+  animation: drawArrowOnce 0.65s cubic-bezier(0.25, 1, 0.5, 1) 0.15s forwards;
+}
+
+.animate-arrow-draw-bottom {
+  stroke-dasharray: 300;
+  stroke-dashoffset: 300;
+  animation: drawArrowOnce 0.65s cubic-bezier(0.25, 1, 0.5, 1) 0.35s forwards;
+}
+
+@keyframes popInArrowhead {
+  0%, 75% {
+    opacity: 0;
+    transform: scale(0.2);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-arrowhead-top {
+  transform-origin: center;
+  animation: popInArrowhead 0.8s ease-out forwards;
+}
+
+.animate-arrowhead-bottom {
+  transform-origin: center;
+  animation: popInArrowhead 1s ease-out forwards;
+}
+
+@keyframes fadeInFill {
+  0% {
+    fill-opacity: 0;
+  }
+  50% {
+    fill-opacity: 0.35;
+  }
+  100% {
+    fill-opacity: 1;
+  }
+}
+
+.animate-bubble-fill {
+  animation: fadeInFill 0.7s ease-out forwards;
+}
+
+/* Study Resources Smooth Slide Carousel Animations */
+@keyframes cardSlideOutLeft {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-100%, 0, 0);
+  }
+}
+
+@keyframes cardSlideInRight {
+  0% {
+    transform: translate3d(100%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes cardSlideOutRight {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(100%, 0, 0);
+  }
+}
+
+@keyframes cardSlideInLeft {
+  0% {
+    transform: translate3d(-100%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.animate-card-slide-out-left {
+  animation: cardSlideOutLeft 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.animate-card-slide-in-right {
+  animation: cardSlideInRight 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.animate-card-slide-out-right {
+  animation: cardSlideOutRight 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.animate-card-slide-in-left {
+  animation: cardSlideInLeft 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+
+
+
+
+
+
